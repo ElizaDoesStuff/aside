@@ -1,0 +1,14 @@
+{
+	"name": "aside",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ElizaDoesStuff/aside"
+	},
+	"author": "ElizaDoesStuff",
+	"license": "MIT",
+	"type": "module"
+}
