@@ -1,10 +1,6 @@
-
-
-export let Environment = {
-	size: {w: 0, h: 0},
-	
+export let Environment = {	
 	query() {
-		this.size.w = process.stdout.columns;
-		this.size.h = process.stdout.rows;
+		this.columns = process.stdout.columns;
+		this.rows = process.stdout.rows;
 	}
 }

@@ -3,17 +3,17 @@ import { stdin, stdout } from "node:process";
 
 import { Editor } from "./Source/editor.js";
 import { Environment } from "./Source/environment.js"
+import { Cursor } from "./Source/cursor.js";
 
 if (!stdin.isTTY) { stdout.write("Standard input stream is not a TTY."); process.exit(); }
 
-let Cursor = {x: 0, y: 0};
-
-Environment.query();
+await Environment.query();
+Editor.init();
 
 keypress(stdin);
-stdin.on("keypress", Editor.handlers.keypress);
-
-setInterval(Editor.render, 0);
+stdin.on("keypress", Editor.keypress);
 
 stdin.setRawMode(true);
 stdin.resume();
+
+setInterval(Editor.render, 1)
