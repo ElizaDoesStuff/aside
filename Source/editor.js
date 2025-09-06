@@ -10,7 +10,6 @@ Editor.init =()=> {
 }
 
 Editor.quit =()=> {
-	console.log(Editor.LineBuffer);
 	process.exit();
 }
 
@@ -35,6 +34,8 @@ Editor.type =character=> {
 }
 
 Editor.backspace =()=> {
+	Cursor.clamp();
+	
 	if (Cursor.x == 0 && Cursor.y == 0) return;
 	if (Cursor.x == 0) {
 		let restOfLine = Editor.LineBuffer.splice(Cursor.y, 1)[0];

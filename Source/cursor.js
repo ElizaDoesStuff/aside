@@ -7,8 +7,10 @@ export let Cursor = {
 	scrolly: 0
 };
 
+Cursor.clamp =()=> { Cursor.x = Math.min( Cursor.x, Editor.LineBuffer[Cursor.y].length); }
+
 Cursor.left =()=> {
-	Cursor.x = Math.min( Cursor.x + 4, Editor.LineBuffer[Cursor.y].length + 4);
+	Cursor.clamp();
 
 	if (Cursor.x == 0 && Cursor.y == 0) return;
 	if (Cursor.x == 0) {
@@ -20,8 +22,6 @@ Cursor.left =()=> {
 }
 
 Cursor.right =()=> {
-	Cursor.x = Math.min( Cursor.x + 4, Editor.LineBuffer[Cursor.y].length + 4);
-
 	if (Cursor.x == Editor.LineBuffer[Cursor.y].length && Cursor.y == Editor.LineBuffer.length - 1) return;
 	if (Cursor.x == Editor.LineBuffer[Cursor.y].length) {
 		Cursor.y += 1;
