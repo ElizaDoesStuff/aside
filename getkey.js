@@ -1,0 +1,1 @@
+import{default as k}from "keypress";let s=process.stdin;k(s);s.setRawMode(true);s.resume();s.on("keypress",(_,e)=>{if(e.name=='q')process.exit();console.log(e)})
