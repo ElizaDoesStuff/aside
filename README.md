@@ -1,1 +1,2 @@
-![Aside — the absurdly simple IDE](Assets/banner.png)
+![Aside — the absurdly simple IDE](Assets/Banner.png)
+
