@@ -2,7 +2,8 @@ import { Environment } from "./environment.js";
 import { Cursor } from "./cursor.js";
 
 export const Editor = {
-	LineBuffer: [],	
+	LineBuffer: [],
+	File: 	
 }
 
 Editor.init =()=> {
@@ -54,6 +55,10 @@ Editor.newline =()=> {
 	Cursor.right();
 }
 
+Editor.save =()=> {
+	
+}
+
 Editor.render =()=> {
 	let rendered = "\x1b[3J\x1b[2J\x1b[H";
 	
@@ -62,6 +67,10 @@ Editor.render =()=> {
 		rendered += Editor.LineBuffer[i].join("");
 		rendered += "\n";
 	}
+
+	rendered += `\x1b[${Environment.rows};H`;
+	
+	if (
 
 	rendered += `\x1b[${ Cursor.y + 1 };${ Math.min( Cursor.x + 4, Editor.LineBuffer[Cursor.y].length + 4) }H`;
 
