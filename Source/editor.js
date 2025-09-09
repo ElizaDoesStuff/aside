@@ -3,7 +3,7 @@ import { Cursor } from "./cursor.js";
 
 export const Editor = {
 	LineBuffer: [],
-	File: 	
+	FilePath: ""
 }
 
 Editor.init =()=> {
@@ -11,6 +11,7 @@ Editor.init =()=> {
 }
 
 Editor.quit =()=> {
+	process.stdout.write("\x1b[3J\x1b[2J\x1b[H")
 	process.exit();
 }
 
@@ -60,19 +61,50 @@ Editor.save =()=> {
 }
 
 Editor.render =()=> {
+
+	// Clear the whole screen and scrollback buffer and move the cursor to the start //
 	let rendered = "\x1b[3J\x1b[2J\x1b[H";
 	
+	// Draw the top of the outline //
+	let topText = "This will be a file name later.txt"
+	rendered += "╭";
+	for (let i = 0; i < Environment.columns - 2; i++) rendered += topText[i - 1] ? topText[i - 1] : "—";
+	rendered += "╮\n";
+
+	// Render all of the lines with content //
 	for (let i = 0; i < Editor.LineBuffer.length; i++) {
-		rendered += (i + 1).toString() + "  ";
-		rendered += Editor.LineBuffer[i].join("");
-		rendered += "\n";
+		rendered += "│ ";
+		
+		let lineNumber = (i + 1).toString();
+		// If your file has a line count in the 5 digits, you have a problem. //
+		for (let j = 0; j < 4; j++) rendered += lineNumber[j] ? lineNumber[j] : " ";
+		for (let j = 0; j < Environment.columns - 3 - 4; j++) rendered += Editor.LineBuffer[i][j] ? Editor.LineBuffer[i][j] : " ";
+
+		rendered += "│\n";
 	}
 
-	rendered += `\x1b[${Environment.rows};H`;
-	
-	if (
+	// Render all the other empty lines //
+	for (let i = Editor.LineBuffer.length + 1; i < Environment.rows - 3; i++) {
+		rendered += "│";
+		for (let j = 0; j < Environment.columns - 2; j++) rendered += " ";
+		rendered += "│\n";
+	}
 
-	rendered += `\x1b[${ Cursor.y + 1 };${ Math.min( Cursor.x + 4, Editor.LineBuffer[Cursor.y].length + 4) }H`;
+	// Draw the bottom of the first box //
+	rendered += "├";
+	for (let i = 0; i < Environment.columns - 2; i++) rendered += "—";
+	rendered += "┤\n";
+
+	rendered += "│ "
+	let bottomText = ">> Wow look it's some awesome place holder text!!";
+	for (let i = 0; i < Environment.columns - 3; i++) rendered += bottomText[i - 1] ? bottomText[i - 1] : " ";
+	rendered += "│\n"
+	
+	// Draw the bottom of the outline //
+	rendered += "╰";
+	for (let i = 0; i < Environment.columns - 2; i++) rendered += "—";
+	rendered += "╯";
+
 
 	process.stdout.write(rendered);
 }
