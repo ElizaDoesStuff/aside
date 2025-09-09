@@ -105,6 +105,10 @@ Editor.render =()=> {
 	for (let i = 0; i < Environment.columns - 2; i++) rendered += "—";
 	rendered += "╯";
 
+	// Move the cursor to the right spot //
+	let realCursorY = Cursor.y - Cursor.scrolly + 2;
+	let realCursorX = Cursor.x - Cursor.scrollx + 7;
+	rendered += `\x1b[${realCursorY};${realCursorX}H`
 
 	process.stdout.write(rendered);
 }
