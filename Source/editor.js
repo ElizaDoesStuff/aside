@@ -26,6 +26,7 @@ Editor.keypress =(character, event)=> {
 		if (event.name == "right") { Cursor.right(); return; }
 		if (event.name == "up") { Cursor.up(); return; }
 		if (event.name == "down") { Cursor.down(); return; }
+		if (!character || event.ctrl || event.meta) return;
 		Editor.type(character);
 	}
 }
@@ -61,6 +62,8 @@ Editor.save =()=> {
 }
 
 Editor.render =()=> {
+	// Increment the frame counter //
+	Environment.frame++;
 
 	// Clear the whole screen and scrollback buffer and move the cursor to the start //
 	let rendered = "\x1b[3J\x1b[2J\x1b[H";
@@ -96,7 +99,7 @@ Editor.render =()=> {
 	rendered += "┤\n";
 
 	rendered += "│ "
-	let bottomText = ">> Wow look it's some awesome place holder text!!";
+	let bottomText = ">> Frame Number: " + Environment.frame.toString();
 	for (let i = 0; i < Environment.columns - 3; i++) rendered += bottomText[i - 1] ? bottomText[i - 1] : " ";
 	rendered += "│\n"
 	
@@ -105,7 +108,7 @@ Editor.render =()=> {
 	for (let i = 0; i < Environment.columns - 2; i++) rendered += "—";
 	rendered += "╯";
 
-	// Move the cursor to the right spot //
+	// Move the cursor //
 	let realCursorY = Cursor.y - Cursor.scrolly + 2;
 	let realCursorX = Cursor.x - Cursor.scrollx + 7;
 	rendered += `\x1b[${realCursorY};${realCursorX}H`

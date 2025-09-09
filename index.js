@@ -16,4 +16,5 @@ stdin.on("keypress", Editor.keypress);
 stdin.setRawMode(true);
 stdin.resume();
 
+stdout.write("\x1b]0;Aside\x07");
 setInterval(Editor.render, 1)
