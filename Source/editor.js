@@ -1,4 +1,7 @@
 import stringWidth from "string-width";
+import { all, common, createEmphasize } from "emphasize";
+
+const emphasize = createEmphasize();
 
 import { Environment } from "./environment.js";
 import { Cursor } from "./cursor.js";
@@ -35,7 +38,7 @@ Editor.keypress =(character, event)=> {
 		if (event.name == "right") { Cursor.right(event.shift); return; }
 		if (event.name == "up") { Cursor.up(event.shift); return; }
 		if (event.name == "down") { Cursor.down(event.shift); return; }
-		if (event.name == "tab") { Editor.type("\x1b[2m│   \x1b[m"); return; }
+		if (event.name == "tab") { Editor.type("\t"); return; }
 		if (!character || event.ctrl || event.meta) return;
 		Editor.type(character);	
 	}
@@ -72,6 +75,8 @@ Editor.save =()=> {
 }
 
 Editor.render =()=> {
+	Environment.query();
+
 	let MainBuffer = "";
 	Cursor.realx = 3 + Size.LINENUMBER;
 	Cursor.realy = Cursor.y - Cursor.scrolly + 2;
@@ -89,6 +94,7 @@ Editor.render =()=> {
 	for (let i = 0; i < Editor.height; i++) {
 
 		let Line =  Lines.VERTICAL + Lines.BLANK;
+		let code = "";
 		
 		if (i >= Editor.LineBuffer.length) {
 			for (let i = 0; i < Editor.width; i++) Line += Lines.BLANK;
@@ -100,15 +106,16 @@ Editor.render =()=> {
 		}
 
 		Line += (i + 1).toString();
-		while (Line.length - 2 < Size.LINENUMBER) Line += Lines.BLANK;
+		while (stringWidth(Line) - 2 < Size.LINENUMBER) Line += Lines.BLANK;
 
 		let j = 0;
-		while (Line.length - 2 < Editor.width) {
-			Line += Editor.LineBuffer[i][j] ? Editor.LineBuffer[i][j] : " ";
-			if (i == Cursor.y) Cursor.realx += Editor.LineBuffer[i][j] ? stringWidth(Editor.LineBuffer[i][j]) : 0;
+		while (stringWidth(code) + Size.LINENUMBER < Editor.width) {
+			code += Editor.LineBuffer[i][j] ? Editor.LineBuffer[i][j] : " ";
+			if (i == Cursor.y && j < Cursor.x) Cursor.realx += Editor.LineBuffer[i][j] ? stringWidth(Editor.LineBuffer[i][j]) : 0;
 			j++;
 		}
-
+		
+		Line += code;
 		Line += Lines.BLANK + Lines.VERTICAL;
 
 		MainBuffer += Line;
