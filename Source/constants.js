@@ -12,10 +12,6 @@ export const Lines = {
 
 export const ANSI = {
 	CLEAR: "\x1b[3J\x1b[2J\x1b[H",
-
+	UNSTYLE: "\x1b[m",
 	CURSORTO: (x,y) => `\x1b[${y};${x}H`
-};
-
-export const Size = {
-	LINENUMBER: 4
 };

@@ -5,7 +5,8 @@ const emphasize = createEmphasize();
 
 import { Environment } from "./environment.js";
 import { Cursor } from "./cursor.js";
-import { Lines, ANSI, Size } from "./constants.js"
+import { Lines, ANSI } from "./constants.js"
+import { Settings } from "./settings.js";
 
 export const Editor = {
 	width: 0,
@@ -78,7 +79,7 @@ Editor.render =()=> {
 	Environment.query();
 
 	let MainBuffer = "";
-	Cursor.realx = 3 + Size.LINENUMBER;
+	Cursor.realx = 3 + Settings.lineNumber.count;
 	Cursor.realy = Cursor.y - Cursor.scrolly + 2;
 
 	// Clear Screen //
@@ -106,12 +107,14 @@ Editor.render =()=> {
 		}
 
 		Line += (i + 1).toString();
-		while (stringWidth(Line) - 2 < Size.LINENUMBER) Line += Lines.BLANK;
+		while (stringWidth(Line) - 2 < Settings.lineNumber.count) Line += Lines.BLANK;
 
 		let j = 0;
-		while (stringWidth(code) + Size.LINENUMBER < Editor.width) {
-			code += Editor.LineBuffer[i][j] ? Editor.LineBuffer[i][j] : " ";
-			if (i == Cursor.y && j < Cursor.x) Cursor.realx += Editor.LineBuffer[i][j] ? stringWidth(Editor.LineBuffer[i][j]) : 0;
+		while (stringWidth(code) + Settings.lineNumber.count < Editor.width) {
+			let nextChar = Editor.LineBuffer[i][j] ? Editor.LineBuffer[i][j] : " ";
+			if (nextChar == "\t") { nextChar = Settings.tab.style + Settings.tab.content + ANSI.UNSTYLE; }
+			code += nextChar;
+			if (i == Cursor.y && j < Cursor.x) Cursor.realx += stringWidth(nextChar);
 			j++;
 		}
 		
